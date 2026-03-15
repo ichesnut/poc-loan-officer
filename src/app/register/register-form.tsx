@@ -38,8 +38,15 @@ export function RegisterForm() {
     });
 
     if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || "Registration failed");
+      const text = await res.text();
+      let message = "Registration failed";
+      try {
+        const data = JSON.parse(text);
+        message = data.error || message;
+      } catch {
+        // Server returned non-JSON error response
+      }
+      setError(message);
       setLoading(false);
       return;
     }
