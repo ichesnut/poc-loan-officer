@@ -65,6 +65,8 @@ export function CollateralSection({
       type: form.get("type") as string,
       description: form.get("description") as string,
       estimatedValue: Number(form.get("estimatedValue")),
+      appraisedValue: form.get("appraisedValue") ? Number(form.get("appraisedValue")) : undefined,
+      lienPosition: form.get("lienPosition") ? Number(form.get("lienPosition")) : undefined,
       notes: (form.get("notes") as string) || undefined,
     };
 
@@ -159,6 +161,28 @@ export function CollateralSection({
                   />
                 </div>
                 <div className="flex flex-col gap-2">
+                  <Label htmlFor="appraisedValue">Appraised Value ($)</Label>
+                  <Input
+                    id="appraisedValue"
+                    name="appraisedValue"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    defaultValue={editing?.appraisedValue ? Number(editing.appraisedValue) : undefined}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="lienPosition">Lien Position</Label>
+                  <Input
+                    id="lienPosition"
+                    name="lienPosition"
+                    type="number"
+                    min="1"
+                    step="1"
+                    defaultValue={editing?.lienPosition ?? undefined}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
                   <Label htmlFor="notes">Notes</Label>
                   <Input id="notes" name="notes" defaultValue={editing?.notes ?? ""} />
                 </div>
@@ -182,6 +206,8 @@ export function CollateralSection({
               <TableHead>Type</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Estimated Value</TableHead>
+              <TableHead>Appraised Value</TableHead>
+              <TableHead>Lien</TableHead>
               {canEdit && <TableHead className="w-24">Actions</TableHead>}
             </TableRow>
           </TableHeader>
@@ -191,6 +217,8 @@ export function CollateralSection({
                 <TableCell>{ASSET_TYPE_LABELS[asset.type] ?? asset.type}</TableCell>
                 <TableCell>{asset.description}</TableCell>
                 <TableCell>{formatCurrency(asset.estimatedValue)}</TableCell>
+                <TableCell>{asset.appraisedValue ? formatCurrency(asset.appraisedValue) : "—"}</TableCell>
+                <TableCell>{asset.lienPosition ?? "—"}</TableCell>
                 {canEdit && (
                   <TableCell>
                     <div className="flex gap-1">

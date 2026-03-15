@@ -22,6 +22,8 @@ export async function GET(
       incomes: { orderBy: { createdAt: "desc" } },
       expenses: { orderBy: { createdAt: "desc" } },
       collateral: { orderBy: { createdAt: "desc" } },
+      offers: { orderBy: { createdAt: "desc" } },
+      statusTransitions: { orderBy: { createdAt: "desc" }, take: 20 },
     },
   });
 

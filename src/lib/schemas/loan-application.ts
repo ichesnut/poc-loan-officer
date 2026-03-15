@@ -7,9 +7,23 @@ export const LoanStatusSchema = z.enum([
   "submitted",
   "in_review",
   "approved",
-  "denied",
-  "funded",
+  "conditionally_approved",
+  "declined",
+  "closing",
   "closed",
+  "withdrawn",
+]);
+
+export const LoanTypeSchema = z.enum(["unsecured", "secured"]);
+
+export const OfferStatusSchema = z.enum([
+  "draft",
+  "pending_review",
+  "approved",
+  "rejected",
+  "sent",
+  "accepted",
+  "expired",
 ]);
 
 export const LoanPurposeSchema = z.enum([
@@ -59,6 +73,7 @@ export const AssetTypeSchema = z.enum([
 
 export const CreateLoanApplicationSchema = z.object({
   purpose: LoanPurposeSchema,
+  loanType: LoanTypeSchema.optional().default("unsecured"),
   requestedAmount: z.coerce.number().positive("Requested amount must be positive"),
   termMonths: z.coerce.number().int().min(1, "Term must be at least 1 month"),
   interestRate: z.coerce.number().min(0).max(1, "Rate must be between 0 and 1").optional(),
@@ -67,11 +82,39 @@ export const CreateLoanApplicationSchema = z.object({
 
 export const UpdateLoanApplicationSchema = z.object({
   purpose: LoanPurposeSchema.optional(),
+  loanType: LoanTypeSchema.optional(),
   requestedAmount: z.coerce.number().positive().optional(),
   termMonths: z.coerce.number().int().min(1).optional(),
   interestRate: z.coerce.number().min(0).max(1).nullable().optional(),
-  status: LoanStatusSchema.optional(),
   notes: z.string().nullable().optional(),
+});
+
+export const TransitionStatusSchema = z.object({
+  targetStatus: LoanStatusSchema,
+  reason: z.string().optional(),
+});
+
+// ─── Offer ──────────────────────────────────────────────────────────────────
+
+export const CreateOfferSchema = z.object({
+  offeredAmount: z.coerce.number().positive("Offered amount must be positive"),
+  interestRate: z.coerce.number().min(0).max(1, "Rate must be between 0 and 1"),
+  termMonths: z.coerce.number().int().min(1, "Term must be at least 1 month"),
+  conditions: z.string().optional(),
+  expiresAt: z.coerce.date().optional(),
+});
+
+export const UpdateOfferSchema = z.object({
+  offeredAmount: z.coerce.number().positive().optional(),
+  interestRate: z.coerce.number().min(0).max(1).optional(),
+  termMonths: z.coerce.number().int().min(1).optional(),
+  conditions: z.string().nullable().optional(),
+  expiresAt: z.coerce.date().nullable().optional(),
+});
+
+export const ReviewOfferSchema = z.object({
+  action: z.enum(["approve", "reject"]),
+  reviewNotes: z.string().optional(),
 });
 
 // ─── Borrower ───────────────────────────────────────────────────────────────
@@ -121,6 +164,8 @@ export const CreateCollateralAssetSchema = z.object({
   type: AssetTypeSchema,
   description: z.string().min(1, "Description is required"),
   estimatedValue: z.coerce.number().positive("Value must be positive"),
+  appraisedValue: z.coerce.number().positive().optional(),
+  lienPosition: z.coerce.number().int().min(1).optional(),
   notes: z.string().optional(),
 });
 
@@ -140,13 +185,30 @@ export const LOAN_PURPOSE_LABELS: Record<string, string> = {
 };
 
 export const LOAN_STATUS_LABELS: Record<string, string> = {
-  draft: "Draft",
+  draft: "New",
   submitted: "Submitted",
   in_review: "In Review",
   approved: "Approved",
-  denied: "Denied",
-  funded: "Funded",
+  conditionally_approved: "Cond. Approved",
+  declined: "Declined",
+  closing: "Closing",
   closed: "Closed",
+  withdrawn: "Withdrawn",
+};
+
+export const LOAN_TYPE_LABELS: Record<string, string> = {
+  unsecured: "Unsecured",
+  secured: "Secured",
+};
+
+export const OFFER_STATUS_LABELS: Record<string, string> = {
+  draft: "Draft",
+  pending_review: "Pending Review",
+  approved: "Approved",
+  rejected: "Rejected",
+  sent: "Sent",
+  accepted: "Accepted",
+  expired: "Expired",
 };
 
 export const INCOME_TYPE_LABELS: Record<string, string> = {

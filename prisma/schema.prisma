@@ -123,9 +123,16 @@ enum LoanStatus {
   submitted
   in_review
   approved
-  denied
-  funded
+  conditionally_approved
+  declined
+  closing
   closed
+  withdrawn
+}
+
+enum LoanType {
+  unsecured
+  secured
 }
 
 enum LoanPurpose {
@@ -143,6 +150,7 @@ model LoanApplication {
   id              String      @id @default(cuid())
   loanNumber      String      @unique @default(cuid())
   status          LoanStatus  @default(draft)
+  loanType        LoanType    @default(unsecured)
   purpose         LoanPurpose
   requestedAmount Decimal     @db.Decimal(12, 2)
   termMonths      Int
@@ -152,14 +160,17 @@ model LoanApplication {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
-  officer    User              @relation(fields: [officerId], references: [id])
-  borrowers  Borrower[]
-  incomes    Income[]
-  expenses   Expense[]
-  collateral CollateralAsset[]
+  officer           User              @relation(fields: [officerId], references: [id])
+  borrowers         Borrower[]
+  incomes           Income[]
+  expenses          Expense[]
+  collateral        CollateralAsset[]
+  offers            Offer[]
+  statusTransitions StatusTransition[]
 
   @@index([officerId])
   @@index([status])
+  @@index([loanType])
   @@map("loan_applications")
 }
 
@@ -257,6 +268,8 @@ model CollateralAsset {
   type           AssetType
   description    String
   estimatedValue Decimal   @db.Decimal(12, 2)
+  appraisedValue Decimal?  @db.Decimal(12, 2)
+  lienPosition   Int?
   notes          String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -265,6 +278,60 @@ model CollateralAsset {
 
   @@index([applicationId])
   @@map("collateral_assets")
+}
+
+// ─── Offers ──────────────────────────────────────────────────────────────────
+
+enum OfferStatus {
+  draft
+  pending_review
+  approved
+  rejected
+  sent
+  accepted
+  expired
+}
+
+model Offer {
+  id              String      @id @default(cuid())
+  applicationId   String
+  offeredAmount   Decimal     @db.Decimal(12, 2)
+  interestRate    Decimal     @db.Decimal(5, 4)
+  termMonths      Int
+  monthlyPayment  Decimal     @db.Decimal(12, 2)
+  conditions      String?
+  status          OfferStatus @default(draft)
+  isAiGenerated   Boolean     @default(false)
+  createdById     String?
+  reviewedById    String?
+  reviewedAt      DateTime?
+  reviewNotes     String?
+  expiresAt       DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@index([status])
+  @@map("offers")
+}
+
+// ─── Status Transitions (Audit Trail) ───────────────────────────────────────
+
+model StatusTransition {
+  id            String     @id @default(cuid())
+  applicationId String
+  fromStatus    LoanStatus
+  toStatus      LoanStatus
+  reason        String?
+  performedById String
+  createdAt     DateTime   @default(now())
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("status_transitions")
 }
 
 // ─── System Config ──────────────────────────────────────────────────────────

@@ -21,7 +21,14 @@ const PERMISSION_MATRIX: Record<string, Role[]> = {
   "loans.create": ["admin", "branch_manager", "loan_officer"],
   "loans.update": ["admin", "branch_manager", "loan_officer", "processor"],
   "loans.approve": ["admin", "branch_manager", "underwriter"],
+  "loans.transition": ["admin", "branch_manager", "loan_officer", "processor", "underwriter"],
   "loans.delete": ["admin"],
+
+  // Offer operations
+  "offers.create": ["admin", "branch_manager", "loan_officer"],
+  "offers.update": ["admin", "branch_manager", "loan_officer"],
+  "offers.review": ["admin", "branch_manager", "underwriter"],
+  "offers.generate": ["admin", "branch_manager", "loan_officer"],
 
   // System configuration
   "system.config": ["admin"],

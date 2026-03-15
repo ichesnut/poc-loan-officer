@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { hasPermission } from "@/lib/permissions";
+import { getPermittedTransitions } from "@/lib/workflow";
 import { ApplicationDetail } from "./application-detail";
 
 export default async function ApplicationDetailPage({
@@ -22,6 +23,8 @@ export default async function ApplicationDetailPage({
       incomes: { orderBy: { createdAt: "desc" } },
       expenses: { orderBy: { createdAt: "desc" } },
       collateral: { orderBy: { createdAt: "desc" } },
+      offers: { orderBy: { createdAt: "desc" } },
+      statusTransitions: { orderBy: { createdAt: "desc" }, take: 20 },
     },
   });
 
@@ -36,11 +39,23 @@ export default async function ApplicationDetailPage({
   }
 
   const canEdit = hasPermission(session.user.role, "loans.update");
+  const canCreateOffers = hasPermission(session.user.role, "offers.create");
+  const canReviewOffers = hasPermission(session.user.role, "offers.review");
+  const canGenerateOffers = hasPermission(session.user.role, "offers.generate");
+  const availableTransitions = getPermittedTransitions(
+    application.status,
+    session.user.role
+  );
 
   return (
     <ApplicationDetail
       application={JSON.parse(JSON.stringify(application))}
       canEdit={canEdit}
+      canCreateOffers={canCreateOffers}
+      canReviewOffers={canReviewOffers}
+      canGenerateOffers={canGenerateOffers}
+      availableTransitions={availableTransitions}
+      userRole={session.user.role}
     />
   );
 }

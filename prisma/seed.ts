@@ -33,7 +33,12 @@ const SEED_PERMISSIONS = [
   { action: "loans.create", description: "Create loan applications" },
   { action: "loans.update", description: "Update loan applications" },
   { action: "loans.approve", description: "Approve/deny loans" },
+  { action: "loans.transition", description: "Transition loan application status" },
   { action: "loans.delete", description: "Delete loan applications" },
+  { action: "offers.create", description: "Create loan offers" },
+  { action: "offers.update", description: "Update loan offers" },
+  { action: "offers.review", description: "Review and approve/reject loan offers" },
+  { action: "offers.generate", description: "Generate AI-assisted loan offers" },
   { action: "system.config", description: "Manage system configuration" },
   { action: "system.dashboard", description: "View admin dashboard" },
   { action: "reports.view", description: "View reports" },
@@ -43,12 +48,13 @@ const ROLE_PERMISSIONS: Record<Role, string[]> = {
   admin: SEED_PERMISSIONS.map((p) => p.action),
   branch_manager: [
     "users.list", "users.view", "groups.list",
-    "loans.list", "loans.create", "loans.update", "loans.approve",
+    "loans.list", "loans.create", "loans.update", "loans.approve", "loans.transition",
+    "offers.create", "offers.update", "offers.review", "offers.generate",
     "system.dashboard", "reports.view",
   ],
-  loan_officer: ["loans.list", "loans.create", "loans.update"],
-  processor: ["loans.list", "loans.update"],
-  underwriter: ["loans.list", "loans.approve"],
+  loan_officer: ["loans.list", "loans.create", "loans.update", "loans.transition", "offers.create", "offers.update", "offers.generate"],
+  processor: ["loans.list", "loans.update", "loans.transition"],
+  underwriter: ["loans.list", "loans.approve", "loans.transition", "offers.review"],
 };
 
 const SEED_CONFIGS = [

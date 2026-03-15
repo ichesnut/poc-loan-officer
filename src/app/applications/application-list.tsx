@@ -26,13 +26,16 @@ import { Plus, Eye } from "lucide-react";
 import {
   LOAN_PURPOSE_LABELS,
   LOAN_STATUS_LABELS,
+  LOAN_TYPE_LABELS,
   LoanPurposeSchema,
+  LoanTypeSchema,
 } from "@/lib/schemas/loan-application";
 
 type ApplicationRow = {
   id: string;
   loanNumber: string;
   status: string;
+  loanType: string;
   purpose: string;
   requestedAmount: string | number;
   termMonths: number;
@@ -47,9 +50,11 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline" | "dest
   submitted: "secondary",
   in_review: "secondary",
   approved: "default",
-  denied: "destructive",
-  funded: "default",
+  conditionally_approved: "secondary",
+  declined: "destructive",
+  closing: "default",
   closed: "outline",
+  withdrawn: "outline",
 };
 
 function formatCurrency(value: string | number) {
@@ -76,6 +81,7 @@ export function ApplicationList({
     const form = new FormData(e.currentTarget);
     const body = {
       purpose: form.get("purpose") as string,
+      loanType: form.get("loanType") as string,
       requestedAmount: Number(form.get("requestedAmount")),
       termMonths: Number(form.get("termMonths")),
     };
@@ -94,6 +100,7 @@ export function ApplicationList({
   }
 
   const purposes = LoanPurposeSchema.options;
+  const loanTypes = LoanTypeSchema.options;
 
   return (
     <>
@@ -125,6 +132,21 @@ export function ApplicationList({
                     {purposes.map((p) => (
                       <option key={p} value={p}>
                         {LOAN_PURPOSE_LABELS[p]}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="loanType">Loan Type</Label>
+                  <select
+                    id="loanType"
+                    name="loanType"
+                    required
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  >
+                    {loanTypes.map((t) => (
+                      <option key={t} value={t}>
+                        {LOAN_TYPE_LABELS[t]}
                       </option>
                     ))}
                   </select>
@@ -163,6 +185,7 @@ export function ApplicationList({
           <TableRow>
             <TableHead>Loan #</TableHead>
             <TableHead>Borrower</TableHead>
+            <TableHead>Type</TableHead>
             <TableHead>Purpose</TableHead>
             <TableHead>Amount</TableHead>
             <TableHead>Term</TableHead>
@@ -174,7 +197,7 @@ export function ApplicationList({
         <TableBody>
           {applications.length === 0 && (
             <TableRow>
-              <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                 No applications found. Create one to get started.
               </TableCell>
             </TableRow>
@@ -191,6 +214,7 @@ export function ApplicationList({
                     ? `${primaryBorrower.firstName} ${primaryBorrower.lastName}`
                     : "—"}
                 </TableCell>
+                <TableCell>{LOAN_TYPE_LABELS[app.loanType] ?? app.loanType}</TableCell>
                 <TableCell>{LOAN_PURPOSE_LABELS[app.purpose] ?? app.purpose}</TableCell>
                 <TableCell>{formatCurrency(app.requestedAmount)}</TableCell>
                 <TableCell>{app.termMonths}mo</TableCell>
