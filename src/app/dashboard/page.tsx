@@ -13,6 +13,13 @@ export default async function DashboardPage() {
 
   const cards = [
     {
+      title: "Loan Applications",
+      description: "Create and manage loan applications",
+      icon: FileText,
+      href: "/applications",
+      roles: ["admin", "branch_manager", "loan_officer", "processor", "underwriter"],
+    },
+    {
       title: "Users",
       description: "Manage system users and roles",
       icon: Users,

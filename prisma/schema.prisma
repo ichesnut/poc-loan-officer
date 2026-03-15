@@ -19,9 +19,10 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  groupMemberships GroupMember[]
-  sessions         Session[]
-  accounts         Account[]
+  groupMemberships  GroupMember[]
+  sessions          Session[]
+  accounts          Account[]
+  loanApplications  LoanApplication[]
 
   @@map("users")
 }
@@ -113,6 +114,157 @@ model GroupMember {
 
   @@unique([userId, groupId])
   @@map("group_members")
+}
+
+// ─── Loan Applications ─────────────────────────────────────────────────────
+
+enum LoanStatus {
+  draft
+  submitted
+  in_review
+  approved
+  denied
+  funded
+  closed
+}
+
+enum LoanPurpose {
+  purchase
+  refinance
+  home_equity
+  construction
+  personal
+  auto
+  business
+  other
+}
+
+model LoanApplication {
+  id              String      @id @default(cuid())
+  loanNumber      String      @unique @default(cuid())
+  status          LoanStatus  @default(draft)
+  purpose         LoanPurpose
+  requestedAmount Decimal     @db.Decimal(12, 2)
+  termMonths      Int
+  interestRate    Decimal?    @db.Decimal(5, 4)
+  notes           String?
+  officerId       String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  officer    User              @relation(fields: [officerId], references: [id])
+  borrowers  Borrower[]
+  incomes    Income[]
+  expenses   Expense[]
+  collateral CollateralAsset[]
+
+  @@index([officerId])
+  @@index([status])
+  @@map("loan_applications")
+}
+
+model Borrower {
+  id            String   @id @default(cuid())
+  applicationId String
+  firstName     String
+  lastName      String
+  email         String?
+  phone         String?
+  dateOfBirth   DateTime?
+  ssn           String?
+  address       String?
+  city          String?
+  state         String?
+  zipCode       String?
+  isPrimary     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("borrowers")
+}
+
+enum IncomeType {
+  employment
+  self_employment
+  rental
+  investment
+  retirement
+  social_security
+  alimony
+  child_support
+  other
+}
+
+model Income {
+  id            String     @id @default(cuid())
+  applicationId String
+  type          IncomeType
+  source        String
+  monthlyAmount Decimal    @db.Decimal(12, 2)
+  isVerified    Boolean    @default(false)
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("incomes")
+}
+
+enum ExpenseType {
+  housing
+  auto_loan
+  student_loan
+  credit_card
+  child_care
+  insurance
+  utilities
+  other
+}
+
+model Expense {
+  id            String      @id @default(cuid())
+  applicationId String
+  type          ExpenseType
+  description   String
+  monthlyAmount Decimal     @db.Decimal(12, 2)
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("expenses")
+}
+
+enum AssetType {
+  real_estate
+  vehicle
+  savings
+  investment
+  business
+  other
+}
+
+model CollateralAsset {
+  id             String    @id @default(cuid())
+  applicationId  String
+  type           AssetType
+  description    String
+  estimatedValue Decimal   @db.Decimal(12, 2)
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("collateral_assets")
 }
 
 // ─── System Config ──────────────────────────────────────────────────────────

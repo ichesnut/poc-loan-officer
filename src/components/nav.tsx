@@ -12,10 +12,17 @@ import {
   Settings,
   Shield,
   LogOut,
+  FileText,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  {
+    href: "/applications",
+    label: "Applications",
+    icon: FileText,
+    roles: ["admin", "branch_manager", "loan_officer", "processor", "underwriter"],
+  },
   { href: "/admin/users", label: "Users", icon: Users, roles: ["admin", "branch_manager"] },
   { href: "/admin/groups", label: "Groups", icon: Group, roles: ["admin", "branch_manager"] },
   {
