@@ -17,6 +17,7 @@ import { IncomeSection } from "./sections/income-section";
 import { ExpenseSection } from "./sections/expense-section";
 import { CollateralSection } from "./sections/collateral-section";
 import { OfferSection } from "./sections/offer-section";
+import { ClosingSection } from "./sections/closing-section";
 import { StatusWorkflow } from "./sections/status-workflow";
 
 type Application = {
@@ -309,6 +310,9 @@ export function ApplicationDetail({
           <TabsTrigger value="offers">
             Offers ({application.offers.length})
           </TabsTrigger>
+          <TabsTrigger value="closing">
+            Closing
+          </TabsTrigger>
           <TabsTrigger value="history">
             History ({application.statusTransitions.length})
           </TabsTrigger>
@@ -354,6 +358,13 @@ export function ApplicationDetail({
             canReview={canReviewOffers}
             canGenerate={canGenerateOffers}
             applicationStatus={application.status}
+          />
+        </TabsContent>
+
+        <TabsContent value="closing" className="pt-4">
+          <ClosingSection
+            applicationId={application.id}
+            canEdit={canEdit}
           />
         </TabsContent>
 

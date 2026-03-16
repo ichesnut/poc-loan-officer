@@ -171,6 +171,20 @@ export const CreateCollateralAssetSchema = z.object({
 
 export const UpdateCollateralAssetSchema = CreateCollateralAssetSchema.partial();
 
+// ─── Closing ────────────────────────────────────────────────────────────
+
+export const UpdateClosingDetailSchema = z.object({
+  closingDate: z.coerce.date().nullable().optional(),
+  fundingAmount: z.coerce.number().min(0).nullable().optional(),
+  closingAgentName: z.string().nullable().optional(),
+  closingNotes: z.string().nullable().optional(),
+});
+
+export const UpdateChecklistItemSchema = z.object({
+  id: z.string(),
+  completed: z.boolean(),
+});
+
 // ─── Display helpers ────────────────────────────────────────────────────────
 
 export const LOAN_PURPOSE_LABELS: Record<string, string> = {

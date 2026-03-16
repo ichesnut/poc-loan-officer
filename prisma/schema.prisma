@@ -167,6 +167,7 @@ model LoanApplication {
   collateral        CollateralAsset[]
   offers            Offer[]
   statusTransitions StatusTransition[]
+  closingDetail     ClosingDetail?
 
   @@index([officerId])
   @@index([status])
@@ -332,6 +333,39 @@ model StatusTransition {
 
   @@index([applicationId])
   @@map("status_transitions")
+}
+
+// ─── Closing ────────────────────────────────────────────────────────────
+
+model ClosingDetail {
+  id               String   @id @default(cuid())
+  applicationId    String   @unique
+  closingDate      DateTime?
+  fundingAmount    Decimal? @db.Decimal(12, 2)
+  closingAgentName String?
+  closingNotes     String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  application    LoanApplication      @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  checklistItems ClosingChecklistItem[]
+
+  @@map("closing_details")
+}
+
+model ClosingChecklistItem {
+  id              String    @id @default(cuid())
+  closingDetailId String
+  name            String
+  completed       Boolean   @default(false)
+  completedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  closingDetail ClosingDetail @relation(fields: [closingDetailId], references: [id], onDelete: Cascade)
+
+  @@index([closingDetailId])
+  @@map("closing_checklist_items")
 }
 
 // ─── System Config ──────────────────────────────────────────────────────────
