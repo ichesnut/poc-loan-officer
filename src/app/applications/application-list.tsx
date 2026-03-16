@@ -75,9 +75,12 @@ export function ApplicationList({
 }) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError("");
+
     const form = new FormData(e.currentTarget);
     const body = {
       purpose: form.get("purpose") as string,
@@ -92,11 +95,22 @@ export function ApplicationList({
       body: JSON.stringify(body),
     });
 
-    if (res.ok) {
-      const app = await res.json();
-      setDialogOpen(false);
-      router.push(`/applications/${app.id}`);
+    if (!res.ok) {
+      const text = await res.text();
+      let message = "Failed to create application";
+      try {
+        const data = JSON.parse(text);
+        message = data.error || message;
+      } catch {
+        // Server returned non-JSON error response
+      }
+      setError(message);
+      return;
     }
+
+    const app = await res.json();
+    setDialogOpen(false);
+    router.push(`/applications/${app.id}`);
   }
 
   const purposes = LoanPurposeSchema.options;
@@ -121,6 +135,7 @@ export function ApplicationList({
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleCreate} className="flex flex-col gap-4">
+                {error && <p className="text-sm text-destructive">{error}</p>}
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="purpose">Loan Purpose</Label>
                   <select

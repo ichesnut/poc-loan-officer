@@ -29,23 +29,27 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const session = await auth();
-  if (!session || !hasPermission(session.user.role, "loans.create")) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  try {
+    const session = await auth();
+    if (!session || !hasPermission(session.user.role, "loans.create")) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const body = await req.json();
+    const parsed = CreateLoanApplicationSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
+    }
+
+    const application = await prisma.loanApplication.create({
+      data: {
+        ...parsed.data,
+        officerId: session.user.id,
+      },
+    });
+
+    return NextResponse.json(application, { status: 201 });
+  } catch {
+    return NextResponse.json({ error: "Failed to create application. Please try again." }, { status: 500 });
   }
-
-  const body = await req.json();
-  const parsed = CreateLoanApplicationSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues }, { status: 400 });
-  }
-
-  const application = await prisma.loanApplication.create({
-    data: {
-      ...parsed.data,
-      officerId: session.user.id,
-    },
-  });
-
-  return NextResponse.json(application, { status: 201 });
 }
