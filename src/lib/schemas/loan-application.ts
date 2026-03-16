@@ -218,6 +218,44 @@ export const UpdateChecklistItemSchema = z.object({
   completed: z.boolean(),
 });
 
+// ─── Document ──────────────────────────────────────────────────────────────
+
+export const DocumentCategorySchema = z.enum([
+  "id_verification",
+  "income_verification",
+  "bank_statements",
+  "tax_returns",
+  "property_appraisal",
+  "title_report",
+  "insurance",
+  "other",
+]);
+
+export const DocumentStatusSchema = z.enum([
+  "pending",
+  "received",
+  "verified",
+  "rejected",
+]);
+
+export const CreateDocumentSchema = z.object({
+  name: z.string().min(1, "Document name is required"),
+  category: DocumentCategorySchema,
+  status: DocumentStatusSchema.optional().default("pending"),
+  uploadedBy: z.string().optional(),
+  notes: z.string().optional(),
+  filePath: z.string().optional(),
+});
+
+export const UpdateDocumentSchema = z.object({
+  name: z.string().min(1).optional(),
+  category: DocumentCategorySchema.optional(),
+  status: DocumentStatusSchema.optional(),
+  uploadedBy: z.string().optional(),
+  notes: z.string().nullable().optional(),
+  filePath: z.string().nullable().optional(),
+});
+
 // ─── Display helpers ────────────────────────────────────────────────────────
 
 export const LOAN_PURPOSE_LABELS: Record<string, string> = {
@@ -298,4 +336,22 @@ export const LIABILITY_TYPE_LABELS: Record<string, string> = {
   personal_loan: "Personal Loan",
   heloc: "HELOC",
   other: "Other",
+};
+
+export const DOCUMENT_CATEGORY_LABELS: Record<string, string> = {
+  id_verification: "ID Verification",
+  income_verification: "Income Verification",
+  bank_statements: "Bank Statements",
+  tax_returns: "Tax Returns",
+  property_appraisal: "Property Appraisal",
+  title_report: "Title Report",
+  insurance: "Insurance",
+  other: "Other",
+};
+
+export const DOCUMENT_STATUS_LABELS: Record<string, string> = {
+  pending: "Pending",
+  received: "Received",
+  verified: "Verified",
+  rejected: "Rejected",
 };

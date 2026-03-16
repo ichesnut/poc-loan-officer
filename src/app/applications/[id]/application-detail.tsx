@@ -19,6 +19,7 @@ import { CollateralSection } from "./sections/collateral-section";
 import { OfferSection } from "./sections/offer-section";
 import { CreditSection } from "./sections/credit-section";
 import { ClosingSection } from "./sections/closing-section";
+import { DocumentsSection } from "./sections/documents-section";
 import { StatusWorkflow } from "./sections/status-workflow";
 
 type Application = {
@@ -314,6 +315,9 @@ export function ApplicationDetail({
           <TabsTrigger value="offers">
             Offers ({application.offers.length})
           </TabsTrigger>
+          <TabsTrigger value="documents">
+            Documents
+          </TabsTrigger>
           <TabsTrigger value="closing">
             Closing
           </TabsTrigger>
@@ -369,6 +373,13 @@ export function ApplicationDetail({
             canReview={canReviewOffers}
             canGenerate={canGenerateOffers}
             applicationStatus={application.status}
+          />
+        </TabsContent>
+
+        <TabsContent value="documents" className="pt-4">
+          <DocumentsSection
+            applicationId={application.id}
+            canEdit={canEdit}
           />
         </TabsContent>
 

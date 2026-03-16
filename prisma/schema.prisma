@@ -170,6 +170,7 @@ model LoanApplication {
   liabilities       Liability[]
   creditSummary     CreditSummary?
   closingDetail     ClosingDetail?
+  documents         Document[]
 
   @@index([officerId])
   @@index([status])
@@ -414,6 +415,45 @@ model ClosingChecklistItem {
 
   @@index([closingDetailId])
   @@map("closing_checklist_items")
+}
+
+// ─── Documents ─────────────────────────────────────────────────────────────
+
+enum DocumentCategory {
+  id_verification
+  income_verification
+  bank_statements
+  tax_returns
+  property_appraisal
+  title_report
+  insurance
+  other
+}
+
+enum DocumentStatus {
+  pending
+  received
+  verified
+  rejected
+}
+
+model Document {
+  id            String           @id @default(cuid())
+  applicationId String
+  name          String
+  category      DocumentCategory
+  status        DocumentStatus   @default(pending)
+  uploadedBy    String?
+  uploadedAt    DateTime         @default(now())
+  notes         String?
+  filePath      String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("documents")
 }
 
 // ─── System Config ──────────────────────────────────────────────────────────
