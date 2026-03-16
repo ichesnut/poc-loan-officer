@@ -167,6 +167,8 @@ model LoanApplication {
   collateral        CollateralAsset[]
   offers            Offer[]
   statusTransitions StatusTransition[]
+  liabilities       Liability[]
+  creditSummary     CreditSummary?
   closingDetail     ClosingDetail?
 
   @@index([officerId])
@@ -333,6 +335,52 @@ model StatusTransition {
 
   @@index([applicationId])
   @@map("status_transitions")
+}
+
+// ─── Credit & Liabilities ─────────────────────────────────────────────
+
+enum LiabilityType {
+  mortgage
+  auto_loan
+  student_loan
+  credit_card
+  personal_loan
+  heloc
+  other
+}
+
+model Liability {
+  id                 String        @id @default(cuid())
+  applicationId      String
+  type               LiabilityType
+  creditor           String
+  accountNumber      String?
+  monthlyPayment     Decimal       @db.Decimal(12, 2)
+  outstandingBalance Decimal       @db.Decimal(12, 2)
+  notes              String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("liabilities")
+}
+
+model CreditSummary {
+  id               String   @id @default(cuid())
+  applicationId    String   @unique
+  creditScore      Int?
+  creditScoreDate  DateTime?
+  totalMonthlyDebt Decimal? @db.Decimal(12, 2)
+  debtToIncomeRatio Decimal? @db.Decimal(5, 4)
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("credit_summaries")
 }
 
 // ─── Closing ────────────────────────────────────────────────────────────

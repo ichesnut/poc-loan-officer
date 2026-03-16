@@ -69,6 +69,16 @@ export const AssetTypeSchema = z.enum([
   "other",
 ]);
 
+export const LiabilityTypeSchema = z.enum([
+  "mortgage",
+  "auto_loan",
+  "student_loan",
+  "credit_card",
+  "personal_loan",
+  "heloc",
+  "other",
+]);
+
 // ─── Loan Application ──────────────────────────────────────────────────────
 
 export const CreateLoanApplicationSchema = z.object({
@@ -171,6 +181,29 @@ export const CreateCollateralAssetSchema = z.object({
 
 export const UpdateCollateralAssetSchema = CreateCollateralAssetSchema.partial();
 
+// ─── Liability ─────────────────────────────────────────────────────────
+
+export const CreateLiabilitySchema = z.object({
+  type: LiabilityTypeSchema,
+  creditor: z.string().min(1, "Creditor is required"),
+  accountNumber: z.string().optional(),
+  monthlyPayment: z.coerce.number().min(0, "Payment must be non-negative"),
+  outstandingBalance: z.coerce.number().min(0, "Balance must be non-negative"),
+  notes: z.string().optional(),
+});
+
+export const UpdateLiabilitySchema = CreateLiabilitySchema.partial();
+
+// ─── Credit Summary ────────────────────────────────────────────────────
+
+export const UpdateCreditSummarySchema = z.object({
+  creditScore: z.coerce.number().int().min(300).max(850).nullable().optional(),
+  creditScoreDate: z.coerce.date().nullable().optional(),
+  totalMonthlyDebt: z.coerce.number().min(0).nullable().optional(),
+  debtToIncomeRatio: z.coerce.number().min(0).max(1).nullable().optional(),
+  notes: z.string().nullable().optional(),
+});
+
 // ─── Closing ────────────────────────────────────────────────────────────
 
 export const UpdateClosingDetailSchema = z.object({
@@ -254,5 +287,15 @@ export const ASSET_TYPE_LABELS: Record<string, string> = {
   savings: "Savings",
   investment: "Investment",
   business: "Business",
+  other: "Other",
+};
+
+export const LIABILITY_TYPE_LABELS: Record<string, string> = {
+  mortgage: "Mortgage",
+  auto_loan: "Auto Loan",
+  student_loan: "Student Loan",
+  credit_card: "Credit Card",
+  personal_loan: "Personal Loan",
+  heloc: "HELOC",
   other: "Other",
 };

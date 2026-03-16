@@ -17,6 +17,7 @@ import { IncomeSection } from "./sections/income-section";
 import { ExpenseSection } from "./sections/expense-section";
 import { CollateralSection } from "./sections/collateral-section";
 import { OfferSection } from "./sections/offer-section";
+import { CreditSection } from "./sections/credit-section";
 import { ClosingSection } from "./sections/closing-section";
 import { StatusWorkflow } from "./sections/status-workflow";
 
@@ -307,6 +308,9 @@ export function ApplicationDetail({
           <TabsTrigger value="collateral">
             Collateral ({application.collateral.length})
           </TabsTrigger>
+          <TabsTrigger value="credit">
+            Credit
+          </TabsTrigger>
           <TabsTrigger value="offers">
             Offers ({application.offers.length})
           </TabsTrigger>
@@ -346,6 +350,13 @@ export function ApplicationDetail({
           <CollateralSection
             applicationId={application.id}
             assets={application.collateral}
+            canEdit={canEdit}
+          />
+        </TabsContent>
+
+        <TabsContent value="credit" className="pt-4">
+          <CreditSection
+            applicationId={application.id}
             canEdit={canEdit}
           />
         </TabsContent>
