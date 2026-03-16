@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
@@ -34,10 +35,12 @@ export default async function ApplicationsPage() {
           </p>
         </div>
       </div>
-      <ApplicationList
-        applications={JSON.parse(JSON.stringify(applications))}
-        canCreate={hasPermission(session.user.role, "loans.create")}
-      />
+      <Suspense>
+        <ApplicationList
+          applications={JSON.parse(JSON.stringify(applications))}
+          canCreate={hasPermission(session.user.role, "loans.create")}
+        />
+      </Suspense>
     </div>
   );
 }
