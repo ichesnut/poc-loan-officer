@@ -58,7 +58,7 @@ const ROLE_PERMISSIONS: Record<Role, string[]> = {
 };
 
 const SEED_CONFIGS = [
-  { key: "app.name", value: "Loan Officer" },
+  { key: "app.name", value: "Tesseract Loan Applications" },
   { key: "app.maxLoanAmount", value: "500000" },
   { key: "app.defaultCurrency", value: "USD" },
 ];

@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Loan Officer — Loan Management System",
+  title: "Tesseract Loan Applications — Loan Management System",
   description: "Internal loan management and processing system",
 };
 

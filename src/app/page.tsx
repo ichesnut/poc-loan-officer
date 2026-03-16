@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center gap-8 py-24 text-center">
-      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Loan Officer</h1>
+      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Tesseract Loan Applications</h1>
       <p className="max-w-md text-lg text-muted-foreground">
         Internal loan management system. Process applications, manage users, and track loan
         pipelines.
