@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { TesseractLogo } from "@/components/tesseract-logo";
 import {
   LayoutDashboard,
   Users,
@@ -53,7 +54,8 @@ export function Nav() {
   return (
     <header className="border-b border-border bg-background">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="text-xl font-semibold tracking-tight">
+        <Link href="/" className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+          <TesseractLogo size={36} className="text-foreground" />
           Tesseract Loan Applications
         </Link>
         <nav className="flex items-center gap-1">
