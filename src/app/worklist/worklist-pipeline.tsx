@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CopyButton } from "@/components/copy-button";
 import { Label } from "@/components/ui/label";
 import {
   LOAN_STATUS_LABELS,
@@ -201,7 +202,10 @@ export function WorklistPipeline({
                           </Badge>
                         </div>
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{app.officer.name ?? app.officer.email}</span>
+                          <span className="inline-flex items-center gap-1">
+                            {app.officer.name ?? app.officer.email}
+                            <CopyButton value={app.officer.email} />
+                          </span>
                           <span>
                             {days === 0 ? "Today" : `${days}d`}
                           </span>

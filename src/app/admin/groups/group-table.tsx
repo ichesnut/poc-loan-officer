@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/copy-button";
 import {
   Table,
   TableBody,
@@ -173,7 +174,10 @@ export function GroupTable({
                                 className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted"
                               >
                                 {user.name ?? user.email}
-                                <span className="text-muted-foreground">{user.email}</span>
+                                <span className="text-muted-foreground inline-flex items-center gap-1">
+                                  {user.email}
+                                  <CopyButton value={user.email} />
+                                </span>
                               </button>
                             ))}
                         </div>

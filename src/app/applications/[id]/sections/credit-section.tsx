@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/copy-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -427,7 +428,14 @@ export function CreditSection({
                     {LIABILITY_TYPE_LABELS[liability.type] ?? liability.type}
                   </TableCell>
                   <TableCell>{liability.creditor}</TableCell>
-                  <TableCell>{liability.accountNumber ?? "—"}</TableCell>
+                  <TableCell>
+                    {liability.accountNumber ? (
+                      <span className="inline-flex items-center gap-1">
+                        {liability.accountNumber}
+                        <CopyButton value={liability.accountNumber} />
+                      </span>
+                    ) : "—"}
+                  </TableCell>
                   <TableCell>
                     {formatCurrency(liability.monthlyPayment)}
                   </TableCell>

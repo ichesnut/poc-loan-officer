@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/copy-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -219,7 +220,12 @@ export function BorrowerSection({
                 )}
               </CardHeader>
               <CardContent className="text-sm text-muted-foreground space-y-1">
-                {b.email && <p>{b.email}</p>}
+                {b.email && (
+                  <p className="inline-flex items-center gap-1">
+                    {b.email}
+                    <CopyButton value={b.email} />
+                  </p>
+                )}
                 {b.phone && <p>{b.phone}</p>}
                 {b.address && (
                   <p>

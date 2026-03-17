@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/copy-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Shield, ShieldOff } from "lucide-react";
@@ -193,8 +194,9 @@ export function ApplicationDetail({
         </Button>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight" title={application.id}>
+            <h1 className="text-3xl font-bold tracking-tight inline-flex items-center gap-2" title={application.id}>
               Application {application.referenceId ?? application.loanNumber.slice(0, 8)}
+              <CopyButton value={application.referenceId ?? application.loanNumber} />
             </h1>
             <Badge variant={STATUS_VARIANT[application.status] ?? "outline"}>
               {LOAN_STATUS_LABELS[application.status] ?? application.status}
@@ -208,8 +210,9 @@ export function ApplicationDetail({
               {LOAN_TYPE_LABELS[application.loanType] ?? application.loanType}
             </Badge>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground inline-flex items-center gap-1">
             Officer: {application.officer.name ?? application.officer.email}
+            <CopyButton value={application.officer.email} />
           </p>
         </div>
         {/* Status transition buttons */}

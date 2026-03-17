@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import { CopyButton } from "@/components/copy-button";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -485,7 +486,10 @@ export function ApplicationList({
             return (
               <TableRow key={app.id}>
                 <TableCell className="font-mono text-xs" title={app.id}>
-                  {app.referenceId ?? app.loanNumber.slice(0, 8)}
+                  <span className="inline-flex items-center gap-1">
+                    {app.referenceId ?? app.loanNumber.slice(0, 8)}
+                    <CopyButton value={app.referenceId ?? app.loanNumber} />
+                  </span>
                 </TableCell>
                 <TableCell className="text-xs" title={formatTime(app.createdAt)}>
                   {formatDate(app.createdAt)}
@@ -504,7 +508,12 @@ export function ApplicationList({
                     {LOAN_STATUS_LABELS[app.status] ?? app.status}
                   </Badge>
                 </TableCell>
-                <TableCell>{app.officer.name ?? app.officer.email}</TableCell>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1">
+                    {app.officer.name ?? app.officer.email}
+                    <CopyButton value={app.officer.email} />
+                  </span>
+                </TableCell>
                 <TableCell>
                   <Button
                     variant="ghost"

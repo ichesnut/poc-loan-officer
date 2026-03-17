@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CopyButton } from "@/components/copy-button";
 import {
   Table,
   TableBody,
@@ -168,7 +169,12 @@ export function UserTable({ users, canEdit }: { users: UserRow[]; canEdit: boole
             return (
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name ?? "—"}</TableCell>
-                <TableCell>{user.email}</TableCell>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1">
+                    {user.email}
+                    <CopyButton value={user.email} />
+                  </span>
+                </TableCell>
                 <TableCell>
                   <Badge variant="secondary">{roleLabel}</Badge>
                 </TableCell>
