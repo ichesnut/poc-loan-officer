@@ -40,6 +40,7 @@ const STATUS_BADGE_VARIANT: Record<string, "default" | "secondary" | "outline" |
 type ApplicationCard = {
   id: string;
   loanNumber: string;
+  referenceId: string | null;
   status: string;
   loanType: string;
   purpose: string;

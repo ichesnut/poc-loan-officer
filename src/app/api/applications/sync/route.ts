@@ -70,8 +70,8 @@ export async function POST(req: Request) {
     const data = parsed.data;
 
     // Check for duplicate sync by referenceId
-    const existing = await prisma.loanApplication.findFirst({
-      where: { notes: { contains: data.referenceId } },
+    const existing = await prisma.loanApplication.findUnique({
+      where: { referenceId: data.referenceId },
     });
     if (existing) {
       return NextResponse.json(
@@ -109,9 +109,10 @@ export async function POST(req: Request) {
           status: "submitted",
           loanType: "unsecured",
           purpose,
+          referenceId: data.referenceId,
           requestedAmount: data.loanAmount,
           termMonths: data.loanTerm,
-          notes: `Synced from applicant portal. Reference: ${data.referenceId}${data.purposeOther ? `. Purpose detail: ${data.purposeOther}` : ""}`,
+          notes: `Synced from applicant portal.${data.purposeOther ? ` Purpose detail: ${data.purposeOther}` : ""}`,
           officerId: officer.id,
         },
       });

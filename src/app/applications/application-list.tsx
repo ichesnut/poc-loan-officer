@@ -44,6 +44,7 @@ import {
 type ApplicationRow = {
   id: string;
   loanNumber: string;
+  referenceId: string | null;
   status: string;
   loanType: string;
   purpose: string;
@@ -144,7 +145,8 @@ export function ApplicationList({
           : "";
         return (
           borrowerName.includes(q) ||
-          app.loanNumber.toLowerCase().includes(q)
+          app.loanNumber.toLowerCase().includes(q) ||
+          (app.referenceId?.toLowerCase().includes(q) ?? false)
         );
       });
     }
@@ -468,8 +470,8 @@ export function ApplicationList({
             const primaryBorrower = app.borrowers[0];
             return (
               <TableRow key={app.id}>
-                <TableCell className="font-mono text-xs">
-                  {app.loanNumber.slice(0, 8)}
+                <TableCell className="font-mono text-xs" title={app.id}>
+                  {app.referenceId ?? app.loanNumber.slice(0, 8)}
                 </TableCell>
                 <TableCell>
                   {primaryBorrower

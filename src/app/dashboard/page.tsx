@@ -104,6 +104,7 @@ export default async function DashboardPage() {
             application: {
               select: {
                 loanNumber: true,
+                referenceId: true,
                 borrowers: {
                   where: { isPrimary: true },
                   take: 1,
@@ -320,7 +321,7 @@ export default async function DashboardPage() {
                 const borrower = t.application.borrowers[0];
                 const label = borrower
                   ? `${borrower.firstName} ${borrower.lastName}`
-                  : t.application.loanNumber;
+                  : (t.application.referenceId ?? t.application.loanNumber);
                 return (
                   <div
                     key={t.id}

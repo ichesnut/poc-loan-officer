@@ -149,6 +149,7 @@ enum LoanPurpose {
 model LoanApplication {
   id              String      @id @default(cuid())
   loanNumber      String      @unique @default(cuid())
+  referenceId     String?     @unique
   status          LoanStatus  @default(draft)
   loanType        LoanType    @default(unsecured)
   purpose         LoanPurpose

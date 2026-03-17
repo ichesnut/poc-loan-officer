@@ -25,6 +25,7 @@ import { StatusWorkflow } from "./sections/status-workflow";
 type Application = {
   id: string;
   loanNumber: string;
+  referenceId: string | null;
   status: string;
   loanType: string;
   purpose: string;
@@ -192,8 +193,8 @@ export function ApplicationDetail({
         </Button>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight">
-              Application {application.loanNumber.slice(0, 8)}
+            <h1 className="text-3xl font-bold tracking-tight" title={application.id}>
+              Application {application.referenceId ?? application.loanNumber.slice(0, 8)}
             </h1>
             <Badge variant={STATUS_VARIANT[application.status] ?? "outline"}>
               {LOAN_STATUS_LABELS[application.status] ?? application.status}
