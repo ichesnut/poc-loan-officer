@@ -97,7 +97,7 @@ function formatDate(value: string) {
 
 function formatTime(value: string) {
   const d = new Date(value);
-  return d.toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  return d.toLocaleTimeString("en-US", { hour12: true, hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 
 export function ApplicationList({
