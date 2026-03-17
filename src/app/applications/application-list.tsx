@@ -86,6 +86,19 @@ function formatCurrency(value: string | number) {
   }).format(Number(value));
 }
 
+function formatDate(value: string) {
+  const d = new Date(value);
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${mm}-${dd}-${yyyy}`;
+}
+
+function formatTime(value: string) {
+  const d = new Date(value);
+  return d.toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
 export function ApplicationList({
   applications,
   canCreate,
@@ -446,6 +459,7 @@ export function ApplicationList({
         <TableHeader>
           <TableRow>
             <TableHead>Loan #</TableHead>
+            <TableHead>Date</TableHead>
             <TableHead>Borrower</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Purpose</TableHead>
@@ -459,7 +473,7 @@ export function ApplicationList({
         <TableBody>
           {filtered.length === 0 && (
             <TableRow>
-              <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
                 {applications.length === 0
                   ? "No applications found. Create one to get started."
                   : "No applications match your filters."}
@@ -472,6 +486,9 @@ export function ApplicationList({
               <TableRow key={app.id}>
                 <TableCell className="font-mono text-xs" title={app.id}>
                   {app.referenceId ?? app.loanNumber.slice(0, 8)}
+                </TableCell>
+                <TableCell className="text-xs" title={formatTime(app.createdAt)}>
+                  {formatDate(app.createdAt)}
                 </TableCell>
                 <TableCell>
                   {primaryBorrower
