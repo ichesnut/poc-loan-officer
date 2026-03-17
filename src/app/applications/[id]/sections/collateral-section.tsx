@@ -105,11 +105,9 @@ export function CollateralSection({
         </p>
         {canEdit && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger>
-              <Button size="sm" onClick={openCreate}>
-                <Plus className="mr-1 size-4" />
-                Add Collateral
-              </Button>
+            <DialogTrigger render={<Button size="sm" onClick={openCreate} />}>
+              <Plus className="mr-1 size-4" />
+              Add Collateral
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

@@ -136,11 +136,9 @@ export function OfferSection({
       <div className="flex gap-2">
         {canCreate && (
           <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-            <DialogTrigger>
-              <Button size="sm">
-                <Plus className="mr-1 size-4" />
-                Create Offer
-              </Button>
+            <DialogTrigger render={<Button size="sm" />}>
+              <Plus className="mr-1 size-4" />
+              Create Offer
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

@@ -306,11 +306,9 @@ export function CreditSection({
           </div>
           {canEdit && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger>
-                <Button size="sm" onClick={openCreate}>
-                  <Plus className="mr-1 size-4" />
-                  Add Liability
-                </Button>
+              <DialogTrigger render={<Button size="sm" onClick={openCreate} />}>
+                <Plus className="mr-1 size-4" />
+                Add Liability
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

@@ -104,11 +104,9 @@ export function IncomeSection({
         </p>
         {canEdit && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger>
-              <Button size="sm" onClick={openCreate}>
-                <Plus className="mr-1 size-4" />
-                Add Income
-              </Button>
+            <DialogTrigger render={<Button size="sm" onClick={openCreate} />}>
+              <Plus className="mr-1 size-4" />
+              Add Income
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

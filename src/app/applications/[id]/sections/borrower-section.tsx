@@ -85,11 +85,9 @@ export function BorrowerSection({
       {canEdit && (
         <div className="flex justify-end">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger>
-              <Button size="sm" onClick={openCreate}>
-                <Plus className="mr-1 size-4" />
-                Add Borrower
-              </Button>
+            <DialogTrigger render={<Button size="sm" onClick={openCreate} />}>
+              <Plus className="mr-1 size-4" />
+              Add Borrower
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>

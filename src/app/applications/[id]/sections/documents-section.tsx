@@ -166,11 +166,9 @@ export function DocumentsSection({
         </div>
         {canEdit && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger>
-              <Button size="sm" onClick={openCreate}>
-                <Plus className="mr-1 size-4" />
-                Add Document
-              </Button>
+            <DialogTrigger render={<Button size="sm" onClick={openCreate} />}>
+              <Plus className="mr-1 size-4" />
+              Add Document
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
