@@ -47,7 +47,7 @@ export function StatusWorkflow({
             {t.reason ?? ""}
           </span>
           <span className="text-xs text-muted-foreground shrink-0">
-            {new Date(t.createdAt).toLocaleString()}
+            {new Date(t.createdAt).toLocaleString("en-US", { hour12: true })}
           </span>
         </div>
       ))}
