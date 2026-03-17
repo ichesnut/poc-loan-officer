@@ -9,10 +9,8 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const where =
-    session.user.role === "admin" || session.user.role === "branch_manager"
-      ? {}
-      : { officerId: session.user.id };
+  // All users with loans.list see all applications; access gated by permission check.
+  const where = {};
 
   const [applications, statusCounts, recentTransitions] = await Promise.all([
     prisma.loanApplication.findMany({
@@ -31,9 +29,7 @@ export async function GET() {
       _sum: { requestedAmount: true },
     }),
     prisma.statusTransition.findMany({
-      where: where.officerId
-        ? { application: { officerId: where.officerId } }
-        : {},
+      where: {},
       orderBy: { createdAt: "desc" },
       take: 10,
       include: {

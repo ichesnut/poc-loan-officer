@@ -75,10 +75,8 @@ export default async function DashboardPage() {
 
   const canViewLoans = hasPermission(session.user.role, "loans.list");
 
-  const where =
-    session.user.role === "admin" || session.user.role === "branch_manager"
-      ? {}
-      : { officerId: session.user.id };
+  // All users with loans.list see all applications; access gated by permission check.
+  const where = {};
 
   // Fetch stats server-side (skip API round-trip)
   const [applications, statusCounts, recentTransitions] = canViewLoans
@@ -99,9 +97,7 @@ export default async function DashboardPage() {
           _sum: { requestedAmount: true },
         }),
         prisma.statusTransition.findMany({
-          where: where.officerId
-            ? { application: { officerId: where.officerId } }
-            : {},
+          where: {},
           orderBy: { createdAt: "desc" },
           take: 10,
           include: {

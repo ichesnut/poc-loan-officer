@@ -31,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Eye, Search, Filter, ArrowUpDown, X } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import {
   LOAN_PURPOSE_LABELS,
   LOAN_STATUS_LABELS,
@@ -248,8 +249,7 @@ export function ApplicationList({
 
           {/* Status Filter */}
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
+            <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
                 <Filter className="mr-1 size-4" />
                 Status
                 {statusFilter.length > 0 && (
@@ -257,7 +257,6 @@ export function ApplicationList({
                     {statusFilter.length}
                   </Badge>
                 )}
-              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
@@ -276,8 +275,7 @@ export function ApplicationList({
 
           {/* Purpose Filter */}
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
+            <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
                 <Filter className="mr-1 size-4" />
                 Loan Type
                 {purposeFilter.length > 0 && (
@@ -285,7 +283,6 @@ export function ApplicationList({
                     {purposeFilter.length}
                   </Badge>
                 )}
-              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuLabel>Filter by Loan Type</DropdownMenuLabel>
@@ -329,11 +326,9 @@ export function ApplicationList({
 
           {/* Sort */}
           <DropdownMenu>
-            <DropdownMenuTrigger>
-              <Button variant="outline" size="sm">
+            <DropdownMenuTrigger className={buttonVariants({ variant: "outline", size: "sm" })}>
                 <ArrowUpDown className="mr-1 size-4" />
                 {SORT_LABELS[sort]}
-              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Sort By</DropdownMenuLabel>
@@ -365,11 +360,9 @@ export function ApplicationList({
           {/* New Application Button */}
           {canCreate && (
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger>
-                <Button size="sm">
+              <DialogTrigger className={buttonVariants({ size: "sm" })}>
                   <Plus className="mr-1 size-4" />
                   New Application
-                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>

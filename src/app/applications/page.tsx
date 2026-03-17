@@ -10,10 +10,9 @@ export default async function ApplicationsPage() {
   if (!session) redirect("/login");
   if (!hasPermission(session.user.role, "loans.list")) redirect("/unauthorized");
 
-  const where =
-    session.user.role === "admin" || session.user.role === "branch_manager"
-      ? {}
-      : { officerId: session.user.id };
+  // All users with loans.list permission can see all applications.
+  // Access is already gated by the hasPermission check above.
+  const where = {};
 
   const applications = await prisma.loanApplication.findMany({
     where,
